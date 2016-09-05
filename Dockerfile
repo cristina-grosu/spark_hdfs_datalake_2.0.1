@@ -98,6 +98,7 @@ RUN jq --arg v "$CONDA_DIR/envs/python3/bin/python"         '.["env"]["PYSPARK_P
 #    'scikit-learn' \
 #    && $CONDA_DIR/bin/conda clean -yt
 RUN $CONDA_DIR/bin/conda config --add channels r
+RUN $CONDA_DIR/bin/conda install --yes -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 RUN $CONDA_DIR/bin/conda create --yes  -n R -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 
 RUN $CONDA_DIR/bin/conda install --yes nb_conda
