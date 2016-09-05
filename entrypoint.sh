@@ -8,50 +8,72 @@ echo Using SPARK_HOME=$SPARK_HOME
 
 . "${SPARK_HOME}/bin/load-spark-env.sh"
 
+export JAVA_HOME="/opt/jdk"                                                                                                                               
+export PATH="$PATH:/opt/jdk/bin:/opt/jdk/jre/bin"
+export HADOOP_HOME="/opt/hadoop"
+export PATH="$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin"
+export HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop"
+export HADOOP_PREFIX="$HADOOP_HOME"
+export HADOOP_SBIN_DIR="$HADOOP_HOME/sbin"
+export HADOOP_SBIN_DIR="$HADOOP_HOME/bin"
+export HADOOP_CLASSPATH="$HADOOP_HOME/share/hadoop/common/"
+export JAVA_CLASSPATH="$JAVA_HOME/jre/lib/"
+export JAVA_OPTS="-Dsun.security.krb5.debug=true"
+
+rm -rf /opt/hadoop/etc/hadoop/core-site.xml
+
+if [ "$HDFS_MASTER" != "" ]; then
+	sed "s/HOSTNAME/$HOSTNAME_MASTER/" /opt/hadoop/etc/hadoop/core-site.xml.template >> /opt/hadoop/etc/hadoop/core-site.xml
+fi
+if [ "$DATALAKE_USER" != "" ]; then
+	sed "s/DATALAKE_USER/$DATALAKE_USER/" /opt/hadoop/etc/hadoop/core-site.xml >> /opt/hadoop/etc/hadoop/core-site.xml.tmp && \
+	mv /opt/hadoop/etc/hadoop/core-site.xml.tmp /opt/hadoop/etc/hadoop/core-site.xml
+fi
+if [ "$KEYTAB_PATH" != "" ]; then
+	sed "s/KEYTAB_PATH/${KEYTAB_PATH}/" /opt/hadoop/etc/hadoop/core-site.xml >> /opt/hadoop/etc/hadoop/core-site.xml.tmp && \
+	mv /opt/hadoop/etc/hadoop/core-site.xml.tmp /opt/hadoop/etc/hadoop/core-site.xml
+fi
+if [ "$USER_HOME_DIR" != "" ]; then
+	sed "s/USER_HOME_DIR/$USER_HOME_DIR/" /opt/hadoop/etc/hadoop/core-site.xml >> /opt/hadoop/etc/hadoop/core-site.xml.tmp && \
+	mv /opt/hadoop/etc/hadoop/core-site.xml.tmp /opt/hadoop/etc/hadoop/core-site.xml
+fi
+if [ "$CONTAINER_DIR" != "" ]; then
+	cp $CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $HADOOP_CLASSPATH 
+    	cp $CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $JAVA_CLASSPATH
+    	cp $CONTAINER_DIR/.k5keytab $KEYTAB_PATH_URI
+fi
+
+
 if [ "$SPARK_MASTER_PORT" = "" ]; then
   SPARK_MASTER_PORT=7077
 fi
-
 if [ "$SPARK_MASTER_IP" = "" ]; then
   SPARK_MASTER_IP="0.0.0.0"
 fi
-
 if [ "$SPARK_MASTER_WEBUI_PORT" = "" ]; then
   SPARK_MASTER_WEBUI_PORT=8080
 fi
-
 if [ "$SPARK_WORKER_WEBUI_PORT" = "" ]; then
   SPARK_WORKER_WEBUI_PORT=8081
 fi
-
 if [ "$SPARK_UI_PORT" = "" ]; then
   SPARK_UI_PORT=4040
 fi
-
 if [ "$SPARK_WORKER_PORT" = "" ]; then
   SPARK_WORKER_PORT=8581
 fi
-
 if [ "$CORES" = "" ]; then
   CORES=1
 fi
-
 if [ "$MEM" = "" ]; then
   MEM=1g
 fi
-
 if [ "$SPARK_MASTER_HOSTNAME" = "" ]; then
   SPARK_MASTER_HOSTNAME=`hostname -f`
 fi
-
 if [ "$SPARK_CONTAINER_DIR" != "" ]; then
     cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/jars
 fi 
-
-if [ "$HDFS_HOSTNAME" != "" ]; then
- HADOOP_CONF_DIR="/opt/spark-1.6.2-bin-hadoop2.6/conf"
- sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/core-site.xml.template > /opt/spark-1.6.2-bin-hadoop2.6/conf/core-site.xml 
-fi
 
 sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template > /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
 sed "s/SPARK_UI_PORT/$SPARK_UI_PORT/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf > /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
