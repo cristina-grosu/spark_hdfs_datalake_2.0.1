@@ -38,6 +38,8 @@ RUN export PATH=$PATH:/$CONDA_DIR/bin
 RUN $CONDA_DIR/bin/conda install --yes \
     'notebook' && \
     $CONDA_DIR/bin/conda clean -yt
+    
+RUN $CONDA_DIR/bin/jupyter notebook  --generate-config
 
 #Install Scala Spark kernel
 ENV SBT_VERSION 0.13.11
