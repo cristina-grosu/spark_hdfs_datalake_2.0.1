@@ -14,7 +14,7 @@ ENV R_LIBS_USER $SPARK_HOME/R/lib
 ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip
 ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Dlog4j.logLevel=info
 
-RUN mv spark-1.6.2-bin-hadoop2.6 /opt/
+RUN mv spark-1.6.2-bin-hadoop2.6 /opt/ && mkdir -p /user && mkdir -p /user/notebooks && mkdir -p /user/datasets
 
 ADD entrypoint.sh /
 ADD core-site.xml.datalake /opt/spark-1.6.2-bin-hadoop2.6/conf/
