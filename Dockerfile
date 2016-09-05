@@ -16,8 +16,8 @@ ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Dlog4j.log
 
 RUN mv spark-1.6.2-bin-hadoop2.6 /opt/
 
-ADD entrypoint.sh /opt/entrypoint.sh
-RUN chmod 777 /opt/entrypoint.sh
+ADD entrypoint.sh /
+RUN chmod 777 /entrypoint.sh
 ADD spark-defaults.conf /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template
 
 ENV HADOOP_HOME /opt/hadoop
@@ -133,4 +133,4 @@ COPY kernel.json /opt/conda/share/jupyter/kernels/scala/
 #        SparkMaster  SparkMasterWebUI  SparkWorkerWebUI REST     Jupyter Spark
 EXPOSE    7077        8080              8081              6066    8888      4040     88
 
-ENTRYPOINT ["/opt/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
