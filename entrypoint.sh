@@ -44,6 +44,10 @@ if [ "$SPARK_MASTER_HOSTNAME" = "" ]; then
   SPARK_MASTER_HOSTNAME=`hostname -f`
 fi
 
+if [ "$SPARK_CONTAINER_DIR" != "" ]; then
+    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/jars
+fi 
+
 if [ "$HDFS_HOSTNAME" != "" ]; then
  HADOOP_CONF_DIR="/opt/spark-1.6.2-bin-hadoop2.6/conf"
  sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/core-site.xml.template > /opt/spark-1.6.2-bin-hadoop2.6/conf/core-site.xml 
