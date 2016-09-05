@@ -23,7 +23,7 @@ export JAVA_OPTS="-Dsun.security.krb5.debug=true"
 rm -rf /opt/hadoop/etc/hadoop/core-site.xml
 
 if [ "$HDFS_MASTER" != "" ]; then
-	sed "s/HOSTNAME/$HOSTNAME_MASTER/" /opt/hadoop/etc/hadoop/core-site.xml.template >> /opt/hadoop/etc/hadoop/core-site.xml
+	sed "s/HOSTNAME/$HDFS_MASTER/" /opt/hadoop/etc/hadoop/core-site.xml.template >> /opt/hadoop/etc/hadoop/core-site.xml
 fi
 if [ "$DATALAKE_USER" != "" ]; then
 	sed "s/DATALAKE_USER/$DATALAKE_USER/" /opt/hadoop/etc/hadoop/core-site.xml >> /opt/hadoop/etc/hadoop/core-site.xml.tmp && \
