@@ -19,7 +19,10 @@ RUN mv spark-1.6.2-bin-hadoop2.6 /opt/
 ADD entrypoint.sh /opt/entrypoint.sh
 RUN chmod 777 /opt/entrypoint.sh
 ADD spark-defaults.conf /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template
-ADD spark-env.sh /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-env.sh
+RUN cp /etc/letsencrypt/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/jars
+ENV HADOOP_HOME /opt/hadoop
+ENV HADOOP_CONF_DIR /opt/hadoop/etc/hadoop
+#ADD spark-env.sh /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-env.sh
 # ADD core-site.xml.template /opt/spark-1.6.2-bin-hadoop2.6/conf/core-site.xml.template
 
 ENV CONDA_DIR /opt/conda
