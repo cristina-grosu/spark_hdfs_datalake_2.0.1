@@ -77,6 +77,13 @@ fi
 if [ "$SPARK_CONTAINER_DIR" != "" ]; then
     cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/lib
     cp /root/google-collections-1.0.jar /opt/spark-1.6.2-bin-hadoop2.6/lib
+    
+    sed "s/# c.NotebookApp.certfile = u\'\'/$CERTFILE_PATH/" /root/.jupyter/jupyter_notebook_config.py >> /root/.jupyter/jupyter_notebook_config.py.tmp && \
+	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
+    sed "s/# c.NotebookApp.keyfile = u\'\'/$KEYFILE_PATH/" /root/.jupyter/jupyter_notebook_config.py >> /root/.jupyter/jupyter_notebook_config.py.tmp && \
+	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
+    sed "s/# c.NotebookApp.notebook_dir = u\'\'/$NOTEBOOK_DIR/" /root/.jupyter/jupyter_notebook_config.py >> /root/.jupyter/jupyter_notebook_config.py.tmp && \
+	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
 fi 
 
 sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
