@@ -75,8 +75,11 @@ if [ "$SPARK_CONTAINER_DIR" != "" ]; then
     cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/jars
 fi 
 
-sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template > /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
-sed "s/SPARK_UI_PORT/$SPARK_UI_PORT/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf > /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
+sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
+mv /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
+
+sed "s/SPARK_UI_PORT/$SPARK_UI_PORT/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
+mv /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
 
 SPARK_MASTER_URL="spark://$SPARK_MASTER_HOSTNAME:$SPARK_MASTER_PORT"
 echo "Using SPARK_MASTER_URL=$SPARK_MASTER_URL"
