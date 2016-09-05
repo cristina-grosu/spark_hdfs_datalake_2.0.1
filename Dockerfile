@@ -22,20 +22,9 @@ ADD spark-defaults.conf /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.
 
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CONF_DIR /opt/hadoop/etc/hadoop
-#ADD spark-env.sh /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-env.sh
-# ADD core-site.xml.template /opt/spark-1.6.2-bin-hadoop2.6/conf/core-site.xml.template
 
 ENV CONDA_DIR /opt/conda
 ENV PATH $CONDA_DIR/bin:$PATH
-
-# Install Miniconda3
-#RUN cd /opt && \
-#    mkdir -p $CONDA_DIR && \
-#    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-3.9.1-Linux-x86_64.sh && \
-#    echo "6c6b44acdd0bc4229377ee10d52c8ac6160c336d9cdd669db7371aa9344e1ac3 *Miniconda3-3.9.1-Linux-x86_64.sh" | sha256sum -c - && \
-#    /bin/bash Miniconda3-3.9.1-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-#    rm Miniconda3-3.9.1-Linux-x86_64.sh && \
-#    $CONDA_DIR/bin/conda install --yes conda==3.14.1
 
 RUN cd /opt && \
     wget https://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh && \
@@ -86,51 +75,19 @@ RUN bash -c '. activate python3 && \
 RUN jq --arg v "$CONDA_DIR/envs/python3/bin/python"         '.["env"]["PYSPARK_PYTHON"]=$v' /opt/conda/share/jupyter/kernels/python3/kernel.json > /tmp/kernel.json && \
      mv /tmp/kernel.json /opt/conda/share/jupyter/kernels/python3/kernel.json 
 
-
-#Install Python2 packages
-#RUN $CONDA_DIR/bin/conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-#    'ipython' \
-#    'ipywidgets' \
-#    'pandas' \
-#    'matplotlib' \
-#    'scipy' \
-#    'seaborn' \
-#    'scikit-learn' \
-#    && $CONDA_DIR/bin/conda clean -yt
 RUN $CONDA_DIR/bin/conda config --add channels r
 RUN $CONDA_DIR/bin/conda install --yes -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 RUN $CONDA_DIR/bin/conda create --yes  -n R -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 
 RUN $CONDA_DIR/bin/conda install --yes nb_conda
-RUN $CONDA_DIR/bin/python -m nb_conda_kernels.install --disable --prefix=$CONDA_DIR
-
-
-#RUN $CONDA_DIR/bin/conda config --add channels r
-#RUN $CONDA_DIR/bin/conda install --yes \
-#    'r' \
- #   'r-essentials' \
- #   'r-base' \
- #   'r-irkernel' \
- #   'r-ggplot2' \
- #   'r-rcurl' 
-    
-RUN $CONDA_DIR/bin/conda clean -yt
+RUN $CONDA_DIR/bin/python -m nb_conda_kernels.install --disable --prefix=$CONDA_DIR && \
+    $CONDA_DIR/bin/conda clean -yt
     
 RUN mkdir -p /opt/conda/share/jupyter/kernels/scala
 COPY kernel.json /opt/conda/share/jupyter/kernels/scala/
 
-#RUN bash -c '. activate python2 && \
-#    python -m ipykernel.kernelspec --prefix=$CONDA_DIR && \
-#    . deactivate'
+RUN cd /root && wget http://central.maven.org/maven2/com/google/collections/google-collections/1.0/google-collections-1.0.jar
 
-#RUN apk add jq
-
-# Set PYSPARK_HOME in the python2 spec
-#RUN jq --arg v "$CONDA_DIR/envs/python2/bin/python" \
-#        '.["env"]["PYSPARK_PYTHON"]=$v' \
-#        $CONDA_DIR/share/jupyter/kernels/python2/kernel.json > /tmp/kernel.json && \
-#        mv /tmp/kernel.json $CONDA_DIR/share/jupyter/kernels/python2/kernel.json
-        
 #        SparkMaster  SparkMasterWebUI  SparkWorkerWebUI REST     Jupyter Spark
 EXPOSE    7077        8080              8081              6066    8888      4040     88
 
