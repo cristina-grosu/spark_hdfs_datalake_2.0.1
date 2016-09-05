@@ -17,6 +17,7 @@ ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Dlog4j.log
 RUN mv spark-1.6.2-bin-hadoop2.6 /opt/
 
 ADD entrypoint.sh /
+ADD core-site.xml.datalake /opt/spark-1.6.2-bin-hadoop2.6/conf/
 RUN chmod 777 /entrypoint.sh
 ADD spark-defaults.conf /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template
 
