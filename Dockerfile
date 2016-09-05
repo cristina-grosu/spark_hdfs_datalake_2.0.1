@@ -80,8 +80,8 @@ RUN $CONDA_DIR/bin/conda install --yes \
     $CONDA_DIR/bin/conda clean -yt
 
 RUN $CONDA_DIR/bin/conda create --yes -p /opt/conda/envs/python3 python=3.5 ipython ipywidgets pandas matplotlib scipy seaborn scikit-learn
-RUN bash -c '. activate python3
-    python -m ipykernel.kernelspec --prefix=/opt/conda
+RUN bash -c '. activate python3 && \
+    python -m ipykernel.kernelspec --prefix=/opt/conda && \
     . deactivate'
 RUN jq --arg v "$CONDA_DIR/envs/python3/bin/python"         '.["env"]["PYSPARK_PYTHON"]=$v' /opt/conda/share/jupyter/kernels/python3/kernel.json > /tmp/kernel.json && \
      mv /tmp/kernel.json /opt/conda/share/jupyter/kernels/python3/kernel.json 
