@@ -38,7 +38,6 @@ ENV PATH $CONDA_DIR/bin:$PATH
 #    $CONDA_DIR/bin/conda install --yes conda==3.14.1
 
 RUN cd /opt && \
-    mkdir -p $CONDA_DIR && \
     wget https://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh && \
      /bin/bash Miniconda2-4.1.11-Linux-x86_64.sh -b -p $CONDA_DIR && \
      rm -rf Miniconda2-4.1.11-Linux-x86_64.sh 
