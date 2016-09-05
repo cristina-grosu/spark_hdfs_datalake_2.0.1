@@ -72,7 +72,8 @@ if [ "$SPARK_MASTER_HOSTNAME" = "" ]; then
   SPARK_MASTER_HOSTNAME=`hostname -f`
 fi
 if [ "$SPARK_CONTAINER_DIR" != "" ]; then
-    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/jars
+    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/lib
+    cp /root/google-collections-1.0.jar /opt/spark-1.6.2-bin-hadoop2.6/lib
 fi 
 
 sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
@@ -89,13 +90,13 @@ MODE=$1
 fi
 
 if [ "$MODE" == "master" ]; then 
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT &
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib &
 	jupyter notebook --ip=0.0.0.0 
 
 elif [ "$MODE" == "worker" ]; then
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL -c $CORES -m $MEM
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL -c $CORES -m $MEM -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib
 else
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT &
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL	-c $CORES -m $MEM &
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib &
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL	-c $CORES -m $MEM -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib &
 	jupyter notebook --ip=0.0.0.0 
 fi
