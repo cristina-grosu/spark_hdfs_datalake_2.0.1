@@ -40,12 +40,6 @@ if [ "$USER_HOME_DIR" != "" ]; then
 	sed "s/USER_HOME_DIR/$USER_HOME_DIR/" /opt/hadoop/etc/hadoop/core-site.xml >> /opt/hadoop/etc/hadoop/core-site.xml.tmp && \
 	mv /opt/hadoop/etc/hadoop/core-site.xml.tmp /opt/hadoop/etc/hadoop/core-site.xml
 fi
-if [ "$CONTAINER_DIR" != "" ]; then
-	cp $CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $HADOOP_CLASSPATH 
-    	cp $CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $JAVA_CLASSPATH
-    	cp $CONTAINER_DIR/.k5keytab $KEYTAB_PATH_URI
-fi
-
 
 if [ "$SPARK_MASTER_PORT" = "" ]; then
   SPARK_MASTER_PORT=7077
@@ -84,6 +78,10 @@ if [ "$SPARK_CONTAINER_DIR" != "" ]; then
 	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
     sed "s/# c.NotebookApp.notebook_dir = u\'\'/$NOTEBOOK_DIR/" /root/.jupyter/jupyter_notebook_config.py >> /root/.jupyter/jupyter_notebook_config.py.tmp && \
 	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
+
+    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $HADOOP_CLASSPATH 
+    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $JAVA_CLASSPATH
+    cp $SPARK_CONTAINER_DIR/.k5keytab $KEYTAB_PATH_URI
 fi 
 
 sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
@@ -99,14 +97,16 @@ if [ "$MODE" = "" ]; then
 MODE=$1
 fi
 
+CLASSPATH=/opt/spark-1.6.2-bin-hadoop2.6/lib/
+
 if [ "$MODE" == "master" ]; then 
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib &
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT &
 	jupyter notebook --ip=0.0.0.0 
 
 elif [ "$MODE" == "worker" ]; then
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL -c $CORES -m $MEM -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL -c $CORES -m $MEM 
 else
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib &
-	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL	-c $CORES -m $MEM -classpath /opt/spark-1.6.2-bin-hadoop2.6/lib &
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT  &
+	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.worker.Worker" --webui-port $SPARK_WORKER_WEBUI_PORT --port $SPARK_WORKER_PORT $SPARK_MASTER_URL	-c $CORES -m $MEM  &
 	jupyter notebook --ip=0.0.0.0 
 fi
