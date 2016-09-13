@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SPARK_HOME="/opt/spark-1.6.2-bin-hadoop2.6"
+SPARK_HOME="/opt/spark-2.0.0-bin-hadoop2.7"
 
 echo Using SPARK_HOME=$SPARK_HOME
 
@@ -69,8 +69,8 @@ if [ "$SPARK_MASTER_HOSTNAME" = "" ]; then
   SPARK_MASTER_HOSTNAME=`hostname -f`
 fi
 if [ "$SPARK_CONTAINER_DIR" != "" ]; then
-    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-1.6.2-bin-hadoop2.6/lib
-    cp /root/google-collections-1.0.jar /opt/spark-1.6.2-bin-hadoop2.6/lib
+    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar /opt/spark-2.0.0-bin-hadoop2.7/lib
+    cp /root/google-collections-1.0.jar /opt/spark-2.0.0-bin-hadoop2.7/lib
     
     sed "s/# c.NotebookApp.certfile = u.*/c.NotebookApp.certfile = u\'$CERTFILE_PATH\'/" /root/.jupyter/jupyter_notebook_config.py >> /root/.jupyter/jupyter_notebook_config.py.tmp && \
 	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
@@ -84,11 +84,11 @@ if [ "$SPARK_CONTAINER_DIR" != "" ]; then
     cp $SPARK_CONTAINER_DIR/.k5keytab $KEYTAB_PATH_URI
 fi 
 
-sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.template >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
-mv /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
+sed "s/HOSTNAME_MASTER/$SPARK_MASTER_HOSTNAME/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.template >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
+mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf
 
-sed "s/SPARK_UI_PORT/$SPARK_UI_PORT/" /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf >> /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp && \
-mv /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf.tmp /opt/spark-1.6.2-bin-hadoop2.6/conf/spark-defaults.conf
+sed "s/SPARK_UI_PORT/$SPARK_UI_PORT/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
+mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf
 
 SPARK_MASTER_URL="spark://$SPARK_MASTER_HOSTNAME:$SPARK_MASTER_PORT"
 echo "Using SPARK_MASTER_URL=$SPARK_MASTER_URL"
@@ -97,7 +97,7 @@ if [ "$MODE" = "" ]; then
 MODE=$1
 fi
 
-CLASSPATH=/opt/spark-1.6.2-bin-hadoop2.6/lib/
+CLASSPATH=/opt/spark-2.0.0-bin-hadoop2.7/lib/
 
 if [ "$MODE" == "master" ]; then 
 	${SPARK_HOME}/bin/spark-class "org.apache.spark.deploy.master.Master" --ip $SPARK_MASTER_IP --port $SPARK_MASTER_PORT --webui-port $SPARK_MASTER_WEBUI_PORT &
