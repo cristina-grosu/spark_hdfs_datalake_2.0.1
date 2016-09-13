@@ -56,7 +56,7 @@ RUN cd /tmp && \
     echo -ne "- with sbt $SBT_VERSION\n" >> /root/.built &&\
     git clone https://github.com/apache/incubator-toree.git && \
     cd incubator-toree && \
-    git checkout 846292233c && \
+    git checkout 87a9eb8ad08406ce0747e92f7714d4eb54153293 && \
     make dist SHELL=/bin/bash && \
     mv dist/toree-kernel /opt/toree-kernel && \
     chmod +x /opt/toree-kernel && \
