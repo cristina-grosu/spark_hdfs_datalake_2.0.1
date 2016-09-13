@@ -78,13 +78,14 @@ RUN bash -c '. activate python3 && \
 RUN jq --arg v "$CONDA_DIR/envs/python3/bin/python"         '.["env"]["PYSPARK_PYTHON"]=$v' /opt/conda/share/jupyter/kernels/python3/kernel.json > /tmp/kernel.json && \
      mv /tmp/kernel.json /opt/conda/share/jupyter/kernels/python3/kernel.json 
 
+RUN $CONDA_DIR/bin/conda install --yes nb_conda
+RUN $CONDA_DIR/bin/python -m nb_conda_kernels.install --disable --prefix=$CONDA_DIR && \
+    $CONDA_DIR/bin/conda clean -yt
+    
 RUN $CONDA_DIR/bin/conda config --add channels r
 RUN $CONDA_DIR/bin/conda install --yes -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 RUN $CONDA_DIR/bin/conda create --yes  -n R -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 
-RUN $CONDA_DIR/bin/conda install --yes nb_conda
-RUN $CONDA_DIR/bin/python -m nb_conda_kernels.install --disable --prefix=$CONDA_DIR && \
-    $CONDA_DIR/bin/conda clean -yt
     
 RUN mkdir -p /opt/conda/share/jupyter/kernels/scala
 COPY kernel.json /opt/conda/share/jupyter/kernels/scala/
