@@ -84,9 +84,8 @@ RUN $CONDA_DIR/bin/python -m nb_conda_kernels.install --disable --prefix=$CONDA_
     
 RUN $CONDA_DIR/bin/conda config --add channels r
 RUN $CONDA_DIR/bin/conda install --yes -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
-RUN $CONDA_DIR/bin/conda create --yes  -n R -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
+RUN $CONDA_DIR/bin/conda create --yes  -n ir -c r r-essentials r-base r-irkernel r-irdisplay r-ggplot2 r-repr r-rcurl
 
-    
 RUN mkdir -p /opt/conda/share/jupyter/kernels/scala
 COPY kernel.json /opt/conda/share/jupyter/kernels/scala/
 
