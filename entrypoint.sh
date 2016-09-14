@@ -42,7 +42,7 @@ if [ "$USER_HOME_DIR" != "" ]; then
 fi
 
 if [ "$JARS" != "" ]; then
-	sed "s/JARS/$JARS/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
+	sed "s/JARS/$JARS/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.template >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
 mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf
 fi
 
@@ -84,8 +84,8 @@ if [ "$SPARK_CONTAINER_DIR" != "" ]; then
     sed "s/# c.NotebookApp.notebook_dir = u.*/c.NotebookApp.notebook_dir = u\'$NOTEBOOK_DIR\'/" /root/.jupyter/jupyter_notebook_config.py >> /root/.jupyter/jupyter_notebook_config.py.tmp && \
 	mv /root/.jupyter/jupyter_notebook_config.py.tmp /root/.jupyter/jupyter_notebook_config.py
 
-    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $HADOOP_CLASSPATH 
-    cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $JAVA_CLASSPATH
+   # cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $HADOOP_CLASSPATH 
+   # cp $SPARK_CONTAINER_DIR/datalake-1.1-SNAPSHOT.jar $JAVA_CLASSPATH
     cp $SPARK_CONTAINER_DIR/.k5keytab $KEYTAB_PATH_URI
 fi 
 
