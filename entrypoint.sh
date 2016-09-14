@@ -114,7 +114,8 @@ mv /opt/conda/etc/jupyter/nbconfig/notebook.json.tmp /opt/conda/etc/jupyter/nbco
 SPARK_MASTER_URL="spark://$SPARK_MASTER_HOSTNAME:$SPARK_MASTER_PORT"
 echo "Using SPARK_MASTER_URL=$SPARK_MASTER_URL"
 
-export SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Dlog4j.logLevel=info --master $SPARK_MASTER_URL"
+#export SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Dlog4j.logLevel=info --master $SPARK_MASTER_URL"
+export SPARK_OPTS="--driver-java-options=-$JAVA_DRIVER_OPTS --driver-java-options=-Dlog4j.logLevel=info --master $SPARK_MASTER_URL"
 
 if [ "$MODE" = "" ]; then
 MODE=$1
