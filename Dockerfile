@@ -11,7 +11,7 @@ RUN rm  /opt/spark-2.0.0-bin-hadoop2.7.tgz
 
 # Spark pointers
 ENV SPARK_HOME /opt/spark-2.0.0-bin-hadoop2.7
-ENV R_LIBS_USER $SPARK_HOME/R/lib
+ENV R_LIBS_USER $SPARK_HOME/R/lib:/opt/conda/envs/ir/lib/R/library:/opt/conda/lib/R/library
 ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip
 
 RUN mv spark-2.0.0-bin-hadoop2.7 /opt/ && mkdir -p /user && mkdir -p /user/notebooks && mkdir -p /user/datasets
