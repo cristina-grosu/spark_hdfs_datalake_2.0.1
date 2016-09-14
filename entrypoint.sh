@@ -42,7 +42,7 @@ if [ "$USER_HOME_DIR" != "" ]; then
 fi
 
 if [ "$JARS" != "" ]; then
-	sed "s/JARS/$JARS/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.template >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
+	sed "s/JARS/$JARS/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
 mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf
 fi
 
@@ -95,7 +95,7 @@ mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-
 sed "s/SPARK_UI_PORT/$SPARK_UI_PORT/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
 mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf
 
-sed "s/SPARK_HOME/$SPARK_HOME/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
+sed "s/SPARK_WAREHOUSE/$SPARK_WAREHOUSE/" /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf >> /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp && \
 mv /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf.tmp /opt/spark-2.0.0-bin-hadoop2.7/conf/spark-defaults.conf
 
 SPARK_MASTER_URL="spark://$SPARK_MASTER_HOSTNAME:$SPARK_MASTER_PORT"
