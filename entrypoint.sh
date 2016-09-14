@@ -25,7 +25,7 @@ rm -rf /opt/hadoop/etc/hadoop/core-site.xml
 if [ "$HDFS_MASTER" != "" ]; then
 	sed "s/HOSTNAME/$HDFS_MASTER/" /opt/hadoop/etc/hadoop/core-site.xml.template >> /opt/hadoop/etc/hadoop/core-site.xml
 else 
-	mv /opt/hadoop/etc/hadoop/core-site.xml.datalake /opt/hadoop/etc/hadoop/core-site.xml
+	mv /opt/spark-2.0.0-bin-hadoop2.7/conf/core-site.xml.datalake /opt/hadoop/etc/hadoop/core-site.xml
 fi
 
 if [ "$DATALAKE_USER" != "" ]; then
